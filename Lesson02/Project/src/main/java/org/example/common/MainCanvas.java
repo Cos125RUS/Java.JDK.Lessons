@@ -1,4 +1,6 @@
-package org.example;
+package org.example.common;
+
+import org.example.circle.MainWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,9 +8,9 @@ import java.util.Random;
 
 public class MainCanvas extends JPanel {
     private static Random rnd = new Random();
-    private final MainWindow controller;
+    private final CanvasRepaintListener controller;
     private long lastFrameTime;
-    MainCanvas(MainWindow controller) {
+    public MainCanvas(CanvasRepaintListener controller) {
         this.controller = controller;
         this.lastFrameTime = System.nanoTime();
     }
