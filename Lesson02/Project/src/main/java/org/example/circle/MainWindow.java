@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MainWindow extends JFrame implements CanvasRepaintListener, MouseListener {
+public class MainWindow extends JFrame implements CanvasRepaintListener, MouseListener, Thread.UncaughtExceptionHandler {
     private static final int POS_X = 50;
     private static final int POS_Y = 100;
     private static final int WINDOWS_WIDTH = 800;
@@ -20,12 +20,13 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, MouseLi
     private final Interactable[] interactables = new Interactable[MAX_COUNT];
 
     public MainWindow() {
+        Thread.setDefaultUncaughtExceptionHandler(this);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WINDOWS_WIDTH, WINDOWS_HEIGHT);
         setTitle("Circles");
-        interactables[0] = new Background();
-        count = 1;
-        for (int i = 1; i < MAX_COUNT; i++) {
+        count = 0;
+        interactables[count++] = new Background();
+        for (int i = count; i < MAX_COUNT; i++) {
             interactables[i] = new Ball();
         }
         MainCanvas canvas = new MainCanvas(this);
@@ -68,9 +69,13 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, MouseLi
         if (e.getButton() == 1) {
             if (count < MAX_COUNT)
                 count++;
+            else
+                throw new RuntimeException("Лимит шаров вашего шарового фонда: " + MAX_COUNT);
         } else if (e.getButton() == 3) {
             if (count > 1)
                 count--;
+            else
+                throw new RuntimeException("Нет больше шаров. Куда ты тыкаешь?!");
         }
     }
 
@@ -82,5 +87,11 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, MouseLi
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        JOptionPane.showMessageDialog(this, e.getMessage(),
+                "Exception!", JOptionPane.ERROR_MESSAGE);
     }
 }
