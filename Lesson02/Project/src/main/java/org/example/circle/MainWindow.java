@@ -1,6 +1,5 @@
 package org.example.circle;
 
-import org.example.AnonimusClasses.Test;
 import org.example.common.Background;
 import org.example.common.CanvasRepaintListener;
 import org.example.common.Interactable;
@@ -16,16 +15,19 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, MouseLi
     private static final int POS_Y = 100;
     private static final int WINDOWS_WIDTH = 800;
     private static final int WINDOWS_HEIGHT = 600;
-    private final Interactable[] interactables = new Interactable[11];
+    private static final int MAX_COUNT = 11;
+    private int count;
+    private final Interactable[] interactables = new Interactable[MAX_COUNT];
 
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WINDOWS_WIDTH, WINDOWS_HEIGHT);
         setTitle("Circles");
-        for (int i = 0; i < interactables.length - 1; i++) {
+        interactables[0] = new Background();
+        count = 1;
+        for (int i = 1; i < MAX_COUNT; i++) {
             interactables[i] = new Ball();
         }
-        interactables[10] = new Background();
         MainCanvas canvas = new MainCanvas(this);
         canvas.addMouseListener(this);
         add(canvas);
@@ -39,33 +41,44 @@ public class MainWindow extends JFrame implements CanvasRepaintListener, MouseLi
         render(canvas, g);
     }
 
-    private void update(MainCanvas canvas,float deltaTime) {
-        for (int i = 0; i < interactables.length; i++) {
+    private void update(MainCanvas canvas, float deltaTime) {
+        for (int i = 0; i < count; i++) {
             interactables[i].update(canvas, deltaTime);
         }
     }
+
     private void render(MainCanvas canvas, Graphics g) {
-        for (int i = 0; i < interactables.length; i++) {
+        for (int i = 0; i < count; i++) {
             interactables[i].render(canvas, g);
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
 
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println("Clicked");
+//        System.out.println("Clicked");
+        if (e.getButton() == 1) {
+            if (count < MAX_COUNT)
+                count++;
+        } else if (e.getButton() == 3) {
+            if (count > 1)
+                count--;
+        }
     }
+
     @Override
     public void mouseEntered(MouseEvent e) {
 
     }
+
     @Override
     public void mouseExited(MouseEvent e) {
 

@@ -1,6 +1,6 @@
 package org.example.AnonimusClasses;
 
-public class Test {
+public class Mouse {
     public interface MouseListener {
         void mouseUp();
         void mouseDown();
